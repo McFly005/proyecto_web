@@ -1,0 +1,34 @@
+name: CI - Validar proyecto web
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Comprobar que index.html existe
+        run: |
+          echo "Comprobando que index.html existe..."
+          test -f index.html && echo "✅ index.html encontrado" || (echo "❌ index.html no encontrado" && exit 1)
+
+      - name: Comprobar que style.css existe
+        run: |
+          echo "Comprobando que style.css existe..."
+          test -f style.css && echo "✅ style.css encontrado" || (echo "❌ style.css no encontrado" && exit 1)
+
+      - name: Validar estructura HTML
+        run: |
+          echo "Validando estructura básica de HTML..."
+          grep -q "<!DOCTYPE html>" index.html && echo "✅ DOCTYPE encontrado" || (echo "❌ DOCTYPE no encontrado" && exit 1)
+          grep -q "<html" index.html && echo "✅ Etiqueta html encontrada" || (echo "❌ Etiqueta html no encontrada" && exit 1)
+          grep -q "<head>" index.html && echo "✅ Etiqueta head encontrada" || (echo "❌ Etiqueta head no encontrada" && exit 1)
+          grep -q "<body>" index.html && echo "✅ Etiqueta body encontrada" || (echo "❌ Etiqueta body no encontrada" && exit 1)
+          echo "✅ Todas las validaciones pasaron correctamente"
